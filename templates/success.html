@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Success</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Thank You for Submitting!</h1>
+        <h2>Submitted Details:</h2>
+        <ul>
+            {% for submission in submissions %}
+            <li>
+                <strong>Name:</strong> {{ submission.name }} <br>
+                <strong>Email:</strong> {{ submission.email }} <br>
+                <strong>User ID:</strong> {{ submission.user_id }} <br>
+                <strong>Schedule Date:</strong> {{ submission.schedule }} <br>
+                <strong>Schedule Time From:</strong> {{ submission.start_time }} <br> 
+                <strong>Schedule Time To:</strong> {{ submission.end_time }} <br>                        </li>
+            {% endfor %}
+        </ul>
+        <a href="/">Submit Again</a>
+    </div>
+</body>
+</html>
+
