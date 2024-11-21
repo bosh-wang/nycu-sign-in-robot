@@ -4,6 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime
 
+from send_email import send_email
+
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -48,8 +51,13 @@ def redirct_and_signin(driver):
 	# click on sign in button
 	signin_button = driver.find_element(By.ID, "ContentPlaceHolder1_GridView_attend_LinkButton_signIn_0")
 	signin_button.click()
+
+	time.sleep(3)
+
 	confirm_signin_button = driver.find_element(By.NAME, "ctl00$ContentPlaceHolder1$Button_attend")
 	confirm_signin_button.click()
+	
+		
 	
 	driver.quit()
 	
@@ -66,9 +74,12 @@ def redirct_and_signout(driver):
 	driver.implicitly_wait(2)
 	
 	# click on sign out button
-	signout_button = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_GridView_attend_LinkButton_signIn_0"]')  # temporary for weird web content
-	# signout_button = driver.find_element(By.ID, "ContentPlaceHolder1_GridView_attend_LinkButton_signOut_0")
+	# signout_button = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_GridView_attend_LinkButton_signIn_0"]')  # temporary for weird web content
+	signout_button = driver.find_element(By.ID, "ContentPlaceHolder1_GridView_attend_LinkButton_signOut_0")
 	signout_button.click()
+
+	time.sleep(3)
+
 	confirm_signout_button = driver.find_element(By.NAME, "ctl00$ContentPlaceHolder1$Button_attend")
 	confirm_signout_button.click()
 	
@@ -99,10 +110,9 @@ url = "https://portal.nycu.edu.tw"
 
 #schedules = get_schedules()
 
-print(username)
 
-start_time = datetime.strptime("2024/11/11 11:40", "%Y/%m/%d %H:%M")
-end_time = datetime.strptime("2024/11/11 15:40", "%Y/%m/%d %H:%M")
+start_time = datetime.strptime("2024/11/25 13:00", "%Y/%m/%d %H:%M")
+end_time = datetime.strptime("2024/11/25 17:00", "%Y/%m/%d %H:%M")
 
 schedules = []
 schedules.append((start_time, end_time))
@@ -115,19 +125,33 @@ for start_time, end_time in schedules:
 	print(f"Waiting until {start_time} to log in...")
 	while datetime.now() < start_time:
 		time.sleep(1)
-   
-	driver = login_portal(url, username, password)
-	redirct_and_signin(driver)
-	print(f"sucessfully sign in at {datetime.now()}, congrats!!")
+	
+	try:
+		driver = login_portal(url, username, password)
+		redirct_and_signin(driver)
+		send_email(f"sucessfully sign in at {datetime.now()}, congrats!!")
+		print(f"sucessfully sign in at {datetime.now()}, congrats!!")
+	except Exception as e:
+		send_email(f"Faild to sign in at {datetime.now()}, {e}")
+		print(e)
+		
     
     # Wait until the end time for logout
 	print(f"Waiting until {end_time} to log out...")
 	while datetime.now() < end_time:
 		time.sleep(1)
-    
-	driver = login_portal(url, username, password)
-	redirct_and_signout(driver)
-	print(f"sucessfully sign out at {datetime.now()}, congrats!!")
+	
+	time.sleep(60)
+
+	try:
+		driver = login_portal(url, username, password)
+		redirct_and_signout(driver)
+		print(f"sucessfully sign out at {datetime.now()}, congrats!!")
+		send_email(f"sucessfully sign out at {datetime.now()}, congrats!!")
+	except Exception as e:
+		send_email(f"Faild to sign out at {datetime.now()}, {e}")
+		print(e)
+		
 
 # driver = login_portal(url, username, password)
 # redirct_and_signout(driver)
