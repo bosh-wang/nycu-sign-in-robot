@@ -1,9 +1,9 @@
-import mariadb
+import mysql.connector
 import sys
 
 # Connect to MariaDB Platform
 try:
-    conn = mariadb.connect(
+    conn = mysql.connector.connect(
         user="root",
         password="root",
         host="localhost",
@@ -11,7 +11,7 @@ try:
         database="user"
 
     )
-except mariadb.Error as e:
+except mysel.connector.Error as e:
     print(f"Error connecting to MariaDB Platform: {e}")
     sys.exit(1)
 
