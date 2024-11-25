@@ -85,34 +85,15 @@ def redirct_and_signout(driver):
 	
 	driver.quit()
 	
-def get_schedules():
-    schedules = []
-    print("Enter multiple login/logout schedules in the format 'MM/DD HH:MM to HH:MM'. ex: 10/15 13:00 to 18:00.  Type 'done' to finish.")
-    while True:
-        schedule = input("Enter schedule: ")
-        if schedule.lower() == "done":
-            break
-        try:
-            # Parse input (e.g., "11/5 12:00 to 16:00")
-            date, times = schedule.split()
-            start_time_str, end_time_str = times.split("to")
-            start_time = datetime.strptime(f"{date} {start_time_str.strip()}", "%m/%d %H:%M")
-            end_time = datetime.strptime(f"{date} {end_time_str.strip()}", "%m/%d %H:%M")
-            schedules.append((start_time, end_time))
-        except ValueError:
-            print("Invalid format. Please use 'MM/DD HH:MM to HH:MM'.")
-    return schedules
-	
+
 
 username = os.getenv("USERNAME")
 password = os.getenv("PASSWORD")
 url = "https://portal.nycu.edu.tw" 
 
-#schedules = get_schedules()
 
-
-start_time = datetime.strptime("2024/11/25 13:00", "%Y/%m/%d %H:%M")
-end_time = datetime.strptime("2024/11/25 17:00", "%Y/%m/%d %H:%M")
+start_time = datetime.strptime("2024/11/25 13:10", "%Y/%m/%d %H:%M")
+end_time = datetime.strptime("2024/11/25 17:10", "%Y/%m/%d %H:%M")
 
 schedules = []
 schedules.append((start_time, end_time))
@@ -133,6 +114,7 @@ for start_time, end_time in schedules:
 		print(f"sucessfully sign in at {datetime.now()}, congrats!!")
 	except Exception as e:
 		send_email(f"Faild to sign in at {datetime.now()}, {e}")
+		driver.quit()
 		print(e)
 		
     
