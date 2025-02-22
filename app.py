@@ -8,8 +8,8 @@ app = Flask(__name__)
 # In-memory storage for demonstration purposes
 submissions = []
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
         
         name = request.form.get('name')
@@ -39,7 +39,20 @@ def index():
         subprocess.Popen(['python', 'robot.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         return redirect(url_for('success'))
-    return render_template('index.html')
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password'].encode('utf-8')
+        hashed_password = bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
+              
+        return redirect(url_for('login'))
+    
+    return render_template('register.html')
+
 
 @app.route('/success')
 def success():

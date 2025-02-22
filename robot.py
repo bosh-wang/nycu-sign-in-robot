@@ -47,6 +47,8 @@ def redirct_and_signin(driver):
 	
 	# wait for timeout
 	driver.implicitly_wait(2)
+
+	time.sleep(3)
 	
 	# click on sign in button
 	signin_button = driver.find_element(By.ID, "ContentPlaceHolder1_GridView_attend_LinkButton_signIn_0")
@@ -72,11 +74,20 @@ def redirct_and_signout(driver):
 	
 	# wait for timeout
 	driver.implicitly_wait(2)
+
+	time.sleep(3)
 	
 	# click on sign out button
 	# signout_button = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_GridView_attend_LinkButton_signIn_0"]')  # temporary for weird web content
-	signout_button = driver.find_element(By.ID, "ContentPlaceHolder1_GridView_attend_LinkButton_signOut_0")
-	signout_button.click()
+	try: 
+		signout_button = driver.find_element(By.ID, "ContentPlaceHolder1_GridView_attend_LinkButton_signOut_0")
+		signout_button.click()
+	except Exception:
+		try:
+			signin_button = driver.find_element(By.ID, "ContentPlaceHolder1_GridView_attend_LinkButton_signIn_0")
+			signin_button.click()
+		except Exception:
+			raise
 
 	time.sleep(3)
 
@@ -92,8 +103,8 @@ password = os.getenv("PASSWORD")
 url = "https://portal.nycu.edu.tw" 
 
 
-start_time = datetime.strptime("2024/11/25 13:10", "%Y/%m/%d %H:%M")
-end_time = datetime.strptime("2024/11/25 17:10", "%Y/%m/%d %H:%M")
+start_time = datetime.strptime("2024/12/19 9:00", "%Y/%m/%d %H:%M")
+end_time = datetime.strptime("2024/12/19 13:00", "%Y/%m/%d %H:%M")
 
 schedules = []
 schedules.append((start_time, end_time))
@@ -110,8 +121,8 @@ for start_time, end_time in schedules:
 	try:
 		driver = login_portal(url, username, password)
 		redirct_and_signin(driver)
-		send_email(f"sucessfully sign in at {datetime.now()}, congrats!!")
-		print(f"sucessfully sign in at {datetime.now()}, congrats!!")
+		send_email(f"Sucessfully sign in at {datetime.now()}, congrats!!")
+		print(f"Sucessfully sign in at {datetime.now()}, congrats!!")
 	except Exception as e:
 		send_email(f"Faild to sign in at {datetime.now()}, {e}")
 		driver.quit()
@@ -128,8 +139,8 @@ for start_time, end_time in schedules:
 	try:
 		driver = login_portal(url, username, password)
 		redirct_and_signout(driver)
-		print(f"sucessfully sign out at {datetime.now()}, congrats!!")
-		send_email(f"sucessfully sign out at {datetime.now()}, congrats!!")
+		print(f"Sucessfully sign out at {datetime.now()}, congrats!!")
+		send_email(f"Sucessfully sign out at {datetime.now()}, congrats!!")
 	except Exception as e:
 		send_email(f"Faild to sign out at {datetime.now()}, {e}")
 		print(e)
