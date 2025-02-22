@@ -1,7 +1,9 @@
 import sqlite3
+import bcrypt
 
 
-def insert_user(username, pwd, email, school_id):
+
+def register(name, email ,pwd):
     db_path = "../database/signinrobot.db"  
     
     try:
@@ -9,9 +11,9 @@ def insert_user(username, pwd, email, school_id):
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO users (username, pwd, email, school_id)
-            VALUES (?, ?, ?, ?);
-        """, (username, pwd, email, school_id))
+            INSERT INTO users (username, email, pwd)
+            VALUES (?, ?, ?);
+        """, (name, email, pwd,))
 
         conn.commit()
         print("User inserted successfully!")
@@ -23,8 +25,7 @@ def insert_user(username, pwd, email, school_id):
         print(f"Unexpected error: {e}")
     conn.close()
 
-
-def insert_schedule(school_id, schedule, start_time, end_time):
+def insert_schedule():
     db_path = "../database/signinrobot.db"  
     
     try:
@@ -66,7 +67,26 @@ def get_schedule(school_id, date):
     conn.close()
     return data
 
+def check_login(email, password):
+    db_path = "../database/signinrobot.db"
 
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("""
+                        SELECT pwd FROM users 
+                        WHERE email = ?;
+                        """, (email,))
+        db_pwd = cursor.fetchone()
+    except Exception as e:
+        print(f"Unexpedted error: {e}")
+    
+    conn.close()
 
+    if db_pwd and bcrypt.checkpw(password.encode('utf-8'),  db_pwd[0].encode('utf-8')):
+        print("login sucessful!!")
+        return True
+    else:
+        return False
 
 
