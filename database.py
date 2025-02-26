@@ -25,7 +25,7 @@ def register(name, email ,pwd):
         print(f"Unexpected error: {e}")
     conn.close()
 
-def insert_schedule():
+def insert_schedule(email, password, school_id, schedule, start_time, end_time):
     db_path = "../database/signinrobot.db"  
     
     try:
@@ -33,9 +33,9 @@ def insert_schedule():
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO schedule (school_id, date, time_from, time_to)
-            VALUES (?, ?, ?, ?);
-        """, (school_id, schedule, start_time, end_time))
+            INSERT INTO schedules (email, password, school_id, schedule, start_time, end_time)
+            VALUES (?, ?, ?, ?, ?, ?);
+        """, (email, password, school_id, schedule, start_time, end_time))
 
         conn.commit()
         print("Schedule inserted successfully!")
@@ -47,7 +47,7 @@ def insert_schedule():
         print(f"Unexpected error: {e}")
     conn.close()
 
-def get_schedule(school_id, date):
+def get_one_schedule(email):
     db_path = "../database/signinrobot.db"  
     
     try:
@@ -55,11 +55,11 @@ def get_schedule(school_id, date):
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT school_id, date, time_from, time_to FROM schedule
-            WHERE school_id = ? AND date = ?;
-        """, (school_id, date,))
+            SELECT email, school_id, schedule, start_time, end_time FROM schedules
+            WHERE email = ?;
+        """, (email,))
 
-        data = cursor.fetchall()
+        data = cursor.fetchone()
         
     except Exception as e:
         print(f"Unexpected error: {e}")

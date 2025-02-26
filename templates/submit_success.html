@@ -11,17 +11,17 @@
         <h1>Thank You for Submitting!</h1>
         <h2>Submitted Details:</h2>
         <ul>
-            {% for submission in submissions %}
             <li>
                 <strong>Name:</strong> {{ submission.name }} <br>
                 <strong>Email:</strong> {{ submission.email }} <br>
                 <strong>School ID:</strong> {{ submission.school_id }} <br>
                 <strong>Schedule Date:</strong> {{ submission.schedule }} <br>
                 <strong>Schedule Time From:</strong> {{ submission.start_time }} <br> 
-                <strong>Schedule Time To:</strong> {{ submission.end_time }} <br>                        </li>
-            {% endfor %}
+                <strong>Schedule Time To:</strong> {{ submission.end_time }} <br>                       
+            </li>
+
         </ul>
-        <a href="/">Submit Again</a>
+        <a href="/submit_schedule">Submit Again</a>
     </div>
 </body>
 </html>
