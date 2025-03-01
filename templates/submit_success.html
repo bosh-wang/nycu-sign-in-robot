@@ -12,16 +12,19 @@
         <h2>Submitted Details:</h2>
         <ul>
             <li>
-                <strong>Name:</strong> {{ submission.name }} <br>
-                <strong>Email:</strong> {{ submission.email }} <br>
-                <strong>School ID:</strong> {{ submission.school_id }} <br>
-                <strong>Schedule Date:</strong> {{ submission.schedule }} <br>
-                <strong>Schedule Time From:</strong> {{ submission.start_time }} <br> 
-                <strong>Schedule Time To:</strong> {{ submission.end_time }} <br>                       
+                <strong>Email:</strong> {{ email }} <br>
+                <strong>School ID:</strong> {{ school_id }} <br>
+                <strong>Schedule From:</strong> {{ schedule_from }} <br>
+                <strong>Schedule To:</strong> {{ schedule_to }} <br>
+                <strong>Schedule Time From:</strong> {{ start_time }} <br> 
+                <strong>Schedule Time To:</strong> {{ end_time }} <br>                       
             </li>
 
         </ul>
-        <a href="/submit_schedule">Submit Again</a>
+
+        <a href="/submit_schedule"><button>Submit again</button></a>
+        <a href="/dashboard"><button>Go to dashboard</button></a>
+
     </div>
 </body>
 </html>

@@ -25,6 +25,10 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
+    if session:
+        return redirect(url_for('dashboard'))
+
     if request.method == 'POST':
        
         email = request.form['email']
@@ -33,7 +37,7 @@ def login():
         if database.check_login(email, password):
             session['logged_in'] = True
             session['email'] = email
-            return render_template('submit.html')
+            return redirect(url_for('dashboard'))
         else:
             return render_template('failed_login.html') 
     
@@ -41,12 +45,19 @@ def login():
 
 
 @app.route('/dashboard')
-# @login_required
+@login_required
 def dashboard():
     email = session.get('email')
-    # schedule = database.get_schedule_by_email(email)
-    # return render_template('dashboard.html', email=email, schedule=schedule)
-    return render_template('dashboard.html', email=email)
+    schedules = database.get_all_schedule(email)
+    s = []
+    for i in range(len(schedules)):
+        s.append({
+        'schedule_from': schedules[i][2],
+        'schedule_to': schedules[i][3],
+        'start_time': schedules[i][4],
+        'end_time': schedules[i][5]
+    })
+    return render_template('dashboard.html', schedules=s)
 
 @app.route('/submit_page', methods=['GET', 'POST'])
 def submit_page():
@@ -62,15 +73,17 @@ def submit_schedule():
         email = request.form.get('email')
         school_id = request.form.get('school_id')
         password = request.form.get('password')
-        schedule = request.form.get('schedule')
+        schedule_from = request.form.get('schedule_from')
+        schedule_to = request.form.get('schedule_to')
         start_time = request.form.get('start_time')
         end_time = request.form.get('end_time')
        
-        database.insert_schedule(email, password, school_id, schedule, start_time, end_time)
+
+        database.insert_schedule(email, password, school_id, schedule_from, schedule_to, start_time, end_time)
 
 
         # open another terminal to run robot stuff
-        # subprocess.Popen(['python', 'robot.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(['python', 'robot.py', email, school_id, password, schedule_from, schedule_to, start_time, end_time], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         return redirect(url_for('submit_success'))
     return render_template('submit_page.html')
@@ -95,9 +108,9 @@ def register():
 @app.route('/submit_success')
 @login_required
 def submit_success():
-    submission = database.get_one_schedule(session['email'])
-    print(submission)
-    return render_template('submit_success.html', submission=submission)
+    schedule = database.get_one_schedule(session['email'])
+    email = session['email']
+    return render_template('submit_success.html', email=email, school_id=schedule[1], schedule_from=schedule[2], schedule_to=schedule[3], start_time=schedule[4], end_time=schedule[5])
 
 @app.route('/logout', methods=['POST'])
 def logout():

@@ -6,7 +6,7 @@ from datetime import datetime
 
 from send_email import send_email
 
-
+import sys
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -98,53 +98,71 @@ def redirct_and_signout(driver):
 	
 
 
-username = os.getenv("USERNAME")
-password = os.getenv("PASSWORD")
-url = "https://portal.nycu.edu.tw" 
-
-
-start_time = datetime.strptime("2024/12/19 9:00", "%Y/%m/%d %H:%M")
-end_time = datetime.strptime("2024/12/19 13:00", "%Y/%m/%d %H:%M")
-
-schedules = []
-schedules.append((start_time, end_time))
-
-
-for start_time, end_time in schedules:
-	print(f"Scheduled login at {start_time} and logout at {end_time}.")
-
-    # Wait until the start time for login
-	print(f"Waiting until {start_time} to log in...")
-	while datetime.now() < start_time:
-		time.sleep(1)
-	
-	try:
-		driver = login_portal(url, username, password)
-		redirct_and_signin(driver)
-		send_email(f"Sucessfully sign in at {datetime.now()}, congrats!!")
-		print(f"Sucessfully sign in at {datetime.now()}, congrats!!")
-	except Exception as e:
-		send_email(f"Faild to sign in at {datetime.now()}, {e}")
-		driver.quit()
-		print(e)
-		
+if __name__ == "__main__":
+	if len(sys.argv) != 8:
+	    print("Usage: python robot.py <email> <password> <school_id> <schedule_from> <schedule_to> <start_time> <end_time>")
+	    sys.exit(1)
     
-    # Wait until the end time for logout
-	print(f"Waiting until {end_time} to log out...")
-	while datetime.now() < end_time:
-		time.sleep(1)
-	
-	time.sleep(60)
+	email = sys.argv[1]
+	password = sys.argv[2]
+	school_id = sys.argv[3]
+	schedule_from = sys.argv[4]
+	schedule_to = sys.argv[5]
+	start_time = sys.argv[6]
+	end_time = sys.argv[7]
 
-	try:
-		driver = login_portal(url, username, password)
-		redirct_and_signout(driver)
-		print(f"Sucessfully sign out at {datetime.now()}, congrats!!")
-		send_email(f"Sucessfully sign out at {datetime.now()}, congrats!!")
-	except Exception as e:
-		send_email(f"Faild to sign out at {datetime.now()}, {e}")
-		print(e)
+	# username = os.getenv("USERNAME")
+	# password = os.getenv("PASSWORD")
+	url = "https://portal.nycu.edu.tw" 
+
+	username = school_id
+	password = password
+
+	schedule_start_time = schedule_from + ' ' + start_time
+	schedule_end_time = schedule_to + ' ' + end_time
+
+	schedule_start_time = datetime.strptime(schedule_start_time, "%Y-%m-%d %H:%M")
+	schedule_end_time = datetime.strptime(schedule_end_time, "%Y-%m-%d %H:%M")
+
+	schedules = []
+	schedules.append((schedule_start_time, schedule_start_time))
+
+
+	for start_time, end_time in schedules:
+		print(f"Scheduled login at {start_time} and logout at {end_time}.")
+		send_email(email, f"Schedule sign in at {start_time}, schedule sign out at {end_time}")
+		# Wait until the start time for login
+		print(f"Waiting until {start_time} to log in...")
+		while datetime.now() < start_time:
+			time.sleep(1)
 		
+		try:
+			driver = login_portal(url, username, password)
+			redirct_and_signin(driver)
+			send_email(email, f"Sucessfully sign in at {datetime.now()}, congrats!!")
+			print(f"Sucessfully sign in at {datetime.now()}, congrats!!")
+		except Exception as e:
+			send_email(f"Faild to sign in at {datetime.now()}, {e}")
+			driver.quit()
+			print(e)
+			
+		
+		# Wait until the end time for logout
+		print(f"Waiting until {end_time} to log out...")
+		while datetime.now() < end_time:
+			time.sleep(1)
+		
+		time.sleep(60)
+
+		try:
+			driver = login_portal(url, username, password)
+			redirct_and_signout(driver)
+			print(f"Sucessfully sign out at {datetime.now()}, congrats!!")
+			send_email(f"Sucessfully sign out at {datetime.now()}, congrats!!")
+		except Exception as e:
+			send_email(f"Faild to sign out at {datetime.now()}, {e}")
+			print(e)
+			
 
 # driver = login_portal(url, username, password)
 # redirct_and_signout(driver)

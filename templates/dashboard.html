@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
 </head>
 <body>
 
@@ -21,15 +43,17 @@
         <h2>Your Ongoing Schedule</h2>
         <table>
             <tr>
-                <th>Date</th>
+                <th>Schedule Date From</th>
+                <th>Schedule Date To</th>
                 <th>Start Time</th>
                 <th>End Time</th>
             </tr>
-            {% for entry in schedule %}
+            {% for schedule in schedules %}
             <tr>
-                <td>{{ entry.schedule }}</td>
-                <td>{{ entry.start_time }}</td>
-                <td>{{ entry.end_time }}</td>
+                <td>{{ schedule.schedule_from }}</td>
+                <td>{{ schedule.schedule_to }}</td>
+                <td>{{ schedule.start_time }}</td>
+                <td>{{ schedule.end_time }}</td>
             </tr>
             {% endfor %}
         </table>

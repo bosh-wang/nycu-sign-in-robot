@@ -25,7 +25,7 @@ def register(name, email ,pwd):
         print(f"Unexpected error: {e}")
     conn.close()
 
-def insert_schedule(email, password, school_id, schedule, start_time, end_time):
+def insert_schedule(email, password, school_id, schedule_from, schedule_to, start_time, end_time):
     db_path = "../database/signinrobot.db"  
     
     try:
@@ -33,9 +33,9 @@ def insert_schedule(email, password, school_id, schedule, start_time, end_time):
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO schedules (email, password, school_id, schedule, start_time, end_time)
-            VALUES (?, ?, ?, ?, ?, ?);
-        """, (email, password, school_id, schedule, start_time, end_time))
+            INSERT INTO schedules (email, password, school_id, schedule_from, schedule_to, start_time, end_time)
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+        """, (email, password, school_id, schedule_from, schedule_to, start_time, end_time))
 
         conn.commit()
         print("Schedule inserted successfully!")
@@ -55,11 +55,32 @@ def get_one_schedule(email):
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT email, school_id, schedule, start_time, end_time FROM schedules
-            WHERE email = ?;
+            SELECT email, school_id, schedule_from, schedule_to, start_time, end_time FROM schedules
+            WHERE email = ?
+            ORDER BY id DESC LIMIT 1;
         """, (email,))
 
         data = cursor.fetchone()
+        
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+    conn.close()
+    return data
+
+def get_all_schedule(email):
+    db_path = "../database/signinrobot.db"  
+    
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT email, school_id, schedule_from, schedule_to, start_time, end_time FROM schedules
+            WHERE email = ?
+        """, (email,))
+
+        data = cursor.fetchall()
         
     except Exception as e:
         print(f"Unexpected error: {e}")

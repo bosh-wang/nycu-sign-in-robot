@@ -9,7 +9,7 @@ import os
 load_dotenv()
 
 
-def send_email(mess):
+def send_email(email, mess):
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
     sender_email = os.getenv("SENDER_EMAIL")
@@ -17,7 +17,7 @@ def send_email(mess):
 
     
     email = [
-        "wangbosh0604@gmail.com",
+        email
             ]
 
     for receiver_email in email:
