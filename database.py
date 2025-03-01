@@ -4,7 +4,7 @@ import bcrypt
 
 
 def register(name, email ,pwd):
-    db_path = "../database/signinrobot.db"  
+    db_path = "./database/signinrobot.db"  
     
     try:
         conn = sqlite3.connect(db_path)
@@ -26,7 +26,7 @@ def register(name, email ,pwd):
     conn.close()
 
 def insert_schedule(email, password, school_id, schedule_from, schedule_to, start_time, end_time):
-    db_path = "../database/signinrobot.db"  
+    db_path = "./database/signinrobot.db"  
     
     try:
         conn = sqlite3.connect(db_path)
@@ -48,7 +48,7 @@ def insert_schedule(email, password, school_id, schedule_from, schedule_to, star
     conn.close()
 
 def get_one_schedule(email):
-    db_path = "../database/signinrobot.db"  
+    db_path = "./database/signinrobot.db"  
     
     try:
         conn = sqlite3.connect(db_path)
@@ -69,7 +69,7 @@ def get_one_schedule(email):
     return data
 
 def get_all_schedule(email):
-    db_path = "../database/signinrobot.db"  
+    db_path = "./database/signinrobot.db"  
     
     try:
         conn = sqlite3.connect(db_path)
@@ -89,7 +89,7 @@ def get_all_schedule(email):
     return data
 
 def check_login(email, password):
-    db_path = "../database/signinrobot.db"
+    db_path = "./database/signinrobot.db"
 
     try:
         conn = sqlite3.connect(db_path)

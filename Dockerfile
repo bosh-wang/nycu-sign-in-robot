@@ -16,8 +16,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
 
 # Set environment variables for Flask
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
 
 # Run the Flask application
+RUN mkdir -p /app/database && chmod 777 /app/database
+RUN python init_db.py
+# RUN sudo apt-get install tar
+RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux-aarch64.tar.gz
+RUN tar -xzvf geckodriver-v0.33.0-linux-aarch64.tar.gz -C /usr/local/bin
+RUN chmod +x /usr/local/bin/geckodriver
+
 CMD ["python", "app.py"]

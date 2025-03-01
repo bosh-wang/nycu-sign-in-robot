@@ -57,7 +57,7 @@ def dashboard():
         'start_time': schedules[i][4],
         'end_time': schedules[i][5]
     })
-    return render_template('dashboard.html', schedules=s)
+    return render_template('dashboard.html', eamil=email, schedules=s)
 
 @app.route('/submit_page', methods=['GET', 'POST'])
 def submit_page():
