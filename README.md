@@ -16,7 +16,7 @@ sudo tar -xzvf geckodriver-v0.33.0-linux-aarch64.tar.gz -C /usr/local/bin
 
 ### **📌 Step 3: Make It Executable**
 ```bash
-sudo tar -xzvf geckodriver-v0.33.0-linux-aarch64.tar.gz -C /usr/local/bin
+chmod +x /usr/local/bin/geckodriver
 ```
 
 https://nicolaslouge.com/post/how-to-set-up-selenium-python-geckodriver-raspberry-pi-arm-2023/
